@@ -1,0 +1,85 @@
+{
+  "name": "heatmap",
+  "displayName": "HeatMap",
+  "description": "Visualize profiling results as a source heatmap inside VS Code.",
+  "version": "0.1.0",
+  "publisher": "jantomec",
+  "private": true,
+  "engines": {
+    "vscode": "^1.97.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [],
+  "files": [
+    "dist",
+    "resources",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node ./scripts/esbuild.mjs",
+    "build:test": "tsc -p tsconfig.test.json",
+    "compile": "npm run build && npm run build:test",
+    "watch": "node ./scripts/esbuild.mjs --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "lint": "eslint .",
+    "test:unit": "node --import tsx --test test/unit/**/*.test.ts",
+    "test:integration": "npm run build:test && node ./dist/test-support/test/integration/runTests.js",
+    "test": "npm run lint && npm run typecheck && npm run test:unit"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "heatmap.profileTest",
+        "title": "Profile Test",
+        "category": "HeatMap"
+      },
+      {
+        "command": "heatmap.toggleResults",
+        "title": "Toggle Profiling Results",
+        "category": "HeatMap"
+      }
+    ],
+    "configuration": {
+      "title": "HeatMap",
+      "properties": {
+        "heatmap.backend": {
+          "type": "string",
+          "default": "python-pytest",
+          "enum": [
+            "python-pytest"
+          ],
+          "markdownDescription": "Profiling backend used by HeatMap."
+        },
+        "heatmap.pythonPath": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Optional Python interpreter override used when profiling pytest targets."
+        },
+        "heatmap.pytestArgs": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "Additional arguments appended to pytest discovery and profiling runs."
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.13.10",
+    "@types/vscode": "^1.97.0",
+    "@vscode/test-electron": "^2.4.1",
+    "esbuild": "^0.25.0",
+    "eslint": "^9.22.0",
+    "mocha": "^10.8.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1"
+  }
+}
